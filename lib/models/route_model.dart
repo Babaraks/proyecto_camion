@@ -1,83 +1,106 @@
-class Route {
+class Event {
+  final int idEvent;
+  final String nameEvent;
+  final String status;
+  final String date;
+  final String startTime;
+  final String endTime;
+
+  Event({
+    required this.idEvent,
+    required this.nameEvent,
+    required this.status,
+    required this.date,
+    required this.startTime,
+    required this.endTime,
+  });
+
+  factory Event.fromJson(Map<String, dynamic> json) {
+    return Event(
+      idEvent: json['id_evento'],
+      nameEvent: json['nombre_evento'],
+      status: json['estado'],
+      date: json['fecha'],
+      startTime: json['hora_inicio'],
+      endTime: json['hora_fin'],
+    );
+  }
+
+    @override
+  String toString() {
+    return 'Event(ID: $idEvent, Name: $nameEvent, Status: $status, Date: $date, Start Time: $startTime, End Time: $endTime)';
+  }
+}
+
+
+class Station {
+  final int idStation;
+  final String nameStation;
+  final String coordinates;
+  final String district;
+  final Event? event;
+
+  Station({
+    required this.idStation,
+    required this.nameStation,
+    required this.coordinates,
+    required this.district,
+    this.event,
+  });
+
+  factory Station.fromJson(Map<String, dynamic> json) {
+    return Station(
+      idStation: json['id'],
+      nameStation: json['nombre'],
+      coordinates: json['coordenadas'],
+      district: json['distrito'],
+      event: json['evento'] != null ? Event.fromJson(json['evento']) : null,
+    );
+  }
+
+    @override
+  String toString() {
+    return 'Station(ID: $idStation, Name: $nameStation, Coordinates: $coordinates, District: $district, Event: ${event?.toString() ?? 'No Event'})';
+  }
+}
+
+class Routes {
   final int idRoute;
   final String nameRoute;
-  final String firstDepartureTime;
-  final String lastDepartureTime;
   final String vehicleType;
-  final String passingFrecuency;
-  final String vehicleColor;
-  final List<Stop> stops;
+  final String? frecuency;
+  final String firstRunTime;
+  final String lastRunTime;
+  final String color;
+  final List<Station> stations;
 
-  Route({
+  Routes({
     required this.idRoute,
     required this.nameRoute,
-    required this.firstDepartureTime,
-    required this.lastDepartureTime,
     required this.vehicleType,
-    required this.passingFrecuency,
-    required this.vehicleColor,
-    required this.stops,
+    this.frecuency,
+    required this.firstRunTime,
+    required this.lastRunTime,
+    required this.color,
+    required this.stations,
   });
 
-  factory Route.fromJson(Map<String, dynamic> json) {
-    var stopsFromJson = json['stops'] as List;
-    List<Stop> stopList = stopsFromJson.map((i) => Stop.fromJson(i)).toList();
-
-    return Route(
-      idRoute: json['id_route'],
-      nameRoute: json['name_route'],
-      firstDepartureTime: json['first_departure_time'],
-      lastDepartureTime: json['last_departure_time'],
-      vehicleType: json['type_vehicle'],
-      passingFrecuency: json['passing_frecuency'],
-      vehicleColor: json['type_color'],
-      stops: stopList,
-    );
-  }
-}
-
-class Stop {
-  final int idStop;
-  final String nameStop;
-  final String locationCoordinates;
-  final String district;
-  final int? idEvent;
-  final String? eventName;
-  final String? eventDate;
-  final String? startTimeEvent;
-  final String? endTimeEvent;
-  final String? eventStatus;
-  final int? followUp;
-
-  Stop({
-    required this.idStop,
-    required this.nameStop,
-    required this.locationCoordinates,
-    required this.district,
-    this.idEvent,
-    this.eventName,
-    this.eventDate,
-    this.startTimeEvent,
-    this.endTimeEvent,
-    this.eventStatus,
-    this.followUp,
-  });
-
-  factory Stop.fromJson(Map<String, dynamic> json) {
-    return Stop(
-      idStop: json['id_stop'],
-      nameStop: json['name_stop'],
-      locationCoordinates: json['location_coordinates0'],
-      district: json['district'],
-      idEvent: json['id_event'],
-      eventName: json['event_name'],
-      eventDate: json['event_date'],
-      startTimeEvent: json['start_time_event'],
-      endTimeEvent: json['end_time_event'],
-      eventStatus: json['event_status'],
-      followUp: json['follow_up']
+  factory Routes.fromJson(Map<String, dynamic> json) {
+    return Routes(
+      idRoute: json['ruta']['id'],
+      nameRoute: json['ruta']['nombre'],
+      vehicleType: json['ruta']['tipo_vehiculo'],
+      frecuency: json['ruta']['frecuencia_paso'],
+      firstRunTime: json['ruta']['primera_hora_corrida'],
+      lastRunTime: json['ruta']['ultima_hora_corrida'],
+      color: json['ruta']['color'],
+      stations:
+          (json['estaciones'] as List).map((e) => Station.fromJson(e)).toList(),
     );
   }
 
+    @override
+  String toString() {
+    return 'Route(ID: $idRoute, Name: $nameRoute, Vehicle: $vehicleType, Frequency: $frecuency, First Run: $firstRunTime, Last Run: $lastRunTime, Color: $color, Stations: [${stations.join(', ')}])';
+  }
 }
-
