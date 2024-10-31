@@ -8,16 +8,24 @@ class RouteService {
   final AuthToken authToken = AuthToken();
 
   Future<List<Routes>> fetchRoutes() async {
-    // String? token = await authToken.fetchToken();
-    final response = await http.get(Uri.parse(endpoint));
+    String? token = await authToken.fetchToken();
+
+    if (token == null) {
+      token = await authToken.fetchToken();
+    }
+
+    final response = await http.get(Uri.parse(endpoint),
+      headers: {
+        'Authorization': '$token' ?? '',
+      },
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> responseJson = jsonDecode(response.body);
       
       return responseJson.map((item) => Routes.fromJson(item)).toList();
     } else {
-      throw Exception('Error al cargar las rutas: ${response.statusCode}');
+      throw Exception('Error al cargar las rutas: ${response.body}');
     }
   }
-
 }
