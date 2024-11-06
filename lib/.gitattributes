@@ -1,0 +1,6 @@
+* text=auto
+*.cc eol=lf
+*.h eol=lf
+*.cmake eol=lf
+*.swift eol=lf
+*.yaml eol=lf

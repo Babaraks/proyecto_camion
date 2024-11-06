@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_movil/screens/map_screen.dart';
 import 'viewModel/route_viewModel.dart';
 
 void main() {
   runApp(MyApp());
 }
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MultiProvider(
+//       providers: [
+//         ChangeNotifierProvider(create: (_) => RouteViewModel()),
+//       ],
+//       child: MaterialApp(
+//         title: 'Route App',
+//         home: Mapscreen(),
+//       ),
+//     );
+//   }
+// }
 
 class MyApp extends StatelessWidget {
   @override
